@@ -1,0 +1,17 @@
+---
+- hosts: agent
+  become: yes
+  become_method: sudo 
+  connection: ssh
+  tasks:
+    - name: Look at the content of tmp
+      command: ls -l /tmp
+      register: OUTPUT
+
+    - debug:
+        msg: "It worked"
+
+    - name: Get the output
+      debug:
+        msg: "{{ OUTPUT }}"
+

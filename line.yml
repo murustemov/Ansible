@@ -1,0 +1,17 @@
+---
+- hosts: agent
+  become: yes 
+  become_method: sudo 
+  connection: ssh
+  gather_facts: no 
+  tasks:
+    - name: Change the content
+      lineinfile:
+        path: /tmp/testfile
+        regexp: EOF
+        line: '/dev/sdb   /backups  /ext4   defaults 0 0'
+      run_once: true
+
+    - name: show the content
+      command: "echo /tmp/testfile"
+      register: TEST

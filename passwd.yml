@@ -1,0 +1,17 @@
+---
+- hosts: agent
+  become: yes
+  become_method: sudo
+  connection: ssh
+  tasks:
+    - name: Passwd file content
+      command: cat /etc/passwd
+      register: OUTPUT
+
+    - name: Show the output
+      debug:
+        msg: "This is the content of /etc/passwd: "
+
+    - name: Second debug
+      debug:
+        msg: "{{ OUTPUT }}"

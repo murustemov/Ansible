@@ -1,0 +1,27 @@
+---
+- hosts: all 
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install apache and run it
+      yum:
+        name: httpd
+        state: latest
+
+    - name: Send template to remote system
+      template:
+        src: /etc/ansible/myplaybooks/templates/index.html
+        dest: /var/www/html/index.html
+        mode: 644
+        owner: root
+        group: root
+
+      notify:
+        - restart httpd
+
+  handlers:
+    - name: restart httpd
+      service:
+        name: httpd
+        state: restarted

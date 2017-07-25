@@ -1,0 +1,15 @@
+---
+- hosts: all
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install tree package on remote system
+      yum:
+        name: tree
+        state: installed
+
+    - name: Install elinks
+      yum:
+        name: elinks
+        state: present

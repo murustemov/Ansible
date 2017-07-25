@@ -1,0 +1,26 @@
+---
+- hosts: all 
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install multiple packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - elinks
+        - telnet
+        - vsftpd
+        - tree
+        - lftp
+
+    - name: Add multiple users
+      user:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - bill
+        - kenny
+        - john
+        - mark

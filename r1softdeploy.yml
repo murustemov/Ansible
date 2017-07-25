@@ -1,0 +1,68 @@
+---
+- hosts: agent
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Copy repo file
+      template:
+        src: /tmp/r1soft.repo
+        dest: /etc/yum.repos.d/r1soft.repo
+        owner: root
+        group: root
+        mode: 644
+    - name: Install cdp-agent
+      yum:
+        name: serverbackup-enterprise-agent
+        state: installed
+    - name: Install dependencies
+      yum:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - kernel-devel
+        - kernel-headers
+        - gcc
+        - perl
+    - name: Update kernel
+      yum:
+        name: kernel
+        state: latest
+    - name: Restart system to new kernel 
+      command: reboot
+    - name: Wait till reboots
+  #local_action: wait_for port=22 host="{{ ansible_ssh_host | default(inventory_hostname) }}"
+
+      local_action:
+        module: wait_for host=192.168.3.139 port=22 delay=10 timeout=300
+
+  # For Centos 6
+  #  - name: Open iptables port
+  #    command: iptables -I INPUT -p tcp --dport 1167 -j ACCEPT
+
+  # - name: Save iptales
+  #   command: service iptables save
+
+  # - name: Restart iptables 
+  #   service : name=iptables state=restarted
+
+  #  For Centos 7
+  #  - name: open firewall rule
+  #    command: firewall_cmd --add-port=1167/tcp --permanent
+  # - name: Restart firewalld
+  #   service: name=firewalld state=restarted
+
+    - name: Power off iptables 
+      service: 
+        name: iptables
+        state: stopped
+
+    - name: Start cdp-agent
+      service: 
+        name: cdp-agent
+        state: restarted
+
+    - name: Get Backup Server Key
+      command: "r1soft-setup --get-key https://192.168.3.47:8080"
+
+

@@ -1,0 +1,12 @@
+---
+- hosts: agent
+  connection: ssh
+  become: yes
+  become_method: sudo
+  roles:
+    - template
+    - agent
+    - multiplepackages
+    - updatekernel
+    - restartagent
+    - getkey

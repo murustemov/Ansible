@@ -1,0 +1,10 @@
+---
+- hosts: all
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install elinks on remote hosts
+      yum:
+        name: elinks
+        state: installed  #present   #latest

@@ -1,0 +1,41 @@
+---
+- hosts: agent
+  become: yes 
+  become_method: sudo 
+  connection: ssh 
+  gather_facts: no 
+  tasks:
+    - name: Create a folder on remote system 
+      file:
+        path: /backups
+        state: directory
+        mode: 755
+        owner: root
+        group: root
+
+    - name: Create a file system on remote host
+      filesystem:
+        fstype: ext4
+        dev: /dev/sdb
+
+    - name: Mount the device temporarily
+      mount:
+        path: /backups
+        src: /dev/sdb
+        fstype: ext4
+        state: mounted
+
+    - debug: msg="Succesfully mounted"
+
+#    - name: Change the content
+#      lineinfile:
+#        path: /etc/fstab
+#        regexp: EOF
+#        line: '/dev/sdb   /backups  ext4   defaults 0 0'
+#      run_once: true
+
+    - name: Check if it is mounted
+      command: df -h
+      register: SNAPSHOT
+
+    - debug: msg="{{ SNAPSHOT }}"

@@ -1,0 +1,17 @@
+---
+- hosts: all 
+  connection: ssh
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Add user
+      user:
+        name: bob
+        state: present
+#        groups: bob
+#        shell: /bin/bash
+#        comment: "Bob Lastname"
+#        home: /home/bob
+#        uid: 1020
+#        gid: 1020
+#        createhome: yes 

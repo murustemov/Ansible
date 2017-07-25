@@ -1,0 +1,12 @@
+---
+- hosts: agent
+  become: yes 
+  become_method: sudo 
+  roles:
+    - updatekernel
+    - restart
+    - wait
+
+  tasks:
+    - name: Install web server
+      yum: name=httpd state=latest

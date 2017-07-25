@@ -1,0 +1,15 @@
+---
+- hosts: all
+  connection: ssh
+  gather_facts: no
+  become: yes
+  become_method: sudo 
+  tasks:
+    - name: Remove Tree from remote system
+      yum:
+        name: tree
+        state: removed # absent
+    - name: Remove elinks from remote system
+      yum:
+        name: elinks
+        state: absent
